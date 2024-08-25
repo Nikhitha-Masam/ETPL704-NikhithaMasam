@@ -1,0 +1,10 @@
+package com.evergent.corejava.collections;
+
+public class CF9_ArrayList_BookObject {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

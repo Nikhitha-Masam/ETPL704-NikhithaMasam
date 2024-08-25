@@ -1,0 +1,7 @@
+package com.evergent.corejava.nikhitha.library;
+
+public class InvalidAgeAdultException extends Exception {
+	public InvalidAgeAdultException(String message) {
+		super(message);
+	}
+}

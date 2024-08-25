@@ -1,0 +1,5 @@
+package com.evergent.corejava.nikhitha.library;
+
+public class InvalidBookTypeKidsException {
+
+}

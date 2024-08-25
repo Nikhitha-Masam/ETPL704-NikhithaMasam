@@ -1,0 +1,35 @@
+package com.evergent.corejava.nikhitha.application4;
+
+
+import java.util.Scanner;
+
+public abstract class BookCategory {
+    public String[] books;
+    public int[] prices;
+    public static Scanner scanner = new Scanner(System.in);
+
+    public BookCategory() {
+        System.out.println("BookCategory initialized");
+    }
+
+    public abstract void displayBooks();
+
+    public void processBookSelection() {
+        while (true) {
+            System.out.print("Enter your choice (1-" + books.length + ", M to return to prior menu): ");
+            String choice = scanner.nextLine().toUpperCase();
+
+            if (choice.equals("M")) return;
+
+            int index = Integer.parseInt(choice) - 1;
+            if (index >= 0 && index < books.length) {
+                System.out.print("Enter quantity: ");
+                int quantity = Integer.parseInt(scanner.nextLine());
+                int amount = prices[index] * quantity;
+                System.out.println("You chose " + books[index] + " - Quantity: " + quantity + " - Total: Rs " + amount);
+                BookStoreManagement.totalAmount += amount;
+                Payment.processPayment();
+            }
+        }
+    }
+}

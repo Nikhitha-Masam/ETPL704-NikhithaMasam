@@ -1,0 +1,18 @@
+package com.evergent.corejava.javabeans;
+
+public class EmployeeImpl {
+
+	public static void main(String[] args) {
+		EmployeeBean emp=new EmployeeBean();
+		emp.setEname("ravi");
+		emp.setEno(100);
+		emp.setSal(500000);
+		
+		System.out.println("Employee No.:"+emp.getEno());
+		System.out.println("Employee name:"+emp.getEname());
+		System.out.println("employee sal:"+emp.getSal());
+		
+
+	}
+
+}

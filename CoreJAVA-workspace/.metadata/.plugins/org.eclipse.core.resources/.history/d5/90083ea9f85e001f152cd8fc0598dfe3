@@ -1,0 +1,333 @@
+package com.evergent.corejava.nikhitha.application4;
+
+import java.util.Scanner;
+
+public class BookStoreManagement2 {
+
+    static Scanner scanner = new Scanner(System.in);
+    static int totalAmount = 0;
+    static int discount = 0;
+
+    static {
+        System.out.println("Welcome to the Book Store!");
+        // Additional static initialization if needed
+    }
+
+    public static void main(String[] args) {
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.display();
+    }
+
+    // Payment Class
+    static class Payment {
+        public static void processPayment() {
+            Discount.applyDiscount();
+            while (true) {
+                System.out.println("\n======================");
+                System.out.println(" Payment Options");
+                System.out.println("======================");
+                System.out.println("1 - View Total Amount");
+                System.out.println("2 - Make Payment");
+                System.out.println("3 - Return to Prior Menu");
+                System.out.println("======================");
+                System.out.print("Enter your choice: ");
+
+                int paymentChoice = Integer.parseInt(scanner.nextLine());
+                switch (paymentChoice) {
+                    case 1:
+                        System.out.println("Total amount to be paid: Rs " + totalAmount);
+                        System.out.println("Discount: Rs " + discount);
+                        System.out.println("Amount after discount: Rs " + (totalAmount - discount));
+                        break;
+                    case 2:
+                        System.out.println("Payment successful! Total amount paid: Rs " + (totalAmount - discount));
+                        totalAmount = 0;
+                        discount = 0;
+                        return;
+                    case 3:
+                        return;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+            }
+        }
+    }
+
+    // Discount Class
+    static class Discount {
+        public static void applyDiscount() {
+            if (totalAmount > 2000) {
+                discount = 300;
+            } else if (totalAmount > 1500) {
+                discount = 150;
+            } else if (totalAmount > 1000) {
+                discount = 100;
+            } else if (totalAmount > 500) {
+                discount = 50;
+            } else {
+                discount = 0;
+            }
+        }
+    }
+
+    // Interface for actions
+    interface MenuAction {
+        void execute();
+    }
+
+    // Main Menu class
+    static class MainMenu {
+
+        public MainMenu() {
+            System.out.println("Main Menu initialized");
+        }
+
+        public void display() {
+            while (true) {
+                System.out.println("\n======================");
+                System.out.println(" BOOK STORE Main Menu");
+                System.out.println("======================");
+                System.out.println("1 - Buy Book");
+                System.out.println("2 - View All Books");
+                System.out.println("3 - Take Membership");
+                System.out.println("4 - Exit");
+                System.out.println("======================");
+                System.out.print("Enter your choice: ");
+
+                int choice = Integer.parseInt(scanner.nextLine());
+                MenuAction action = null;
+                switch (choice) {
+                    case 1:
+                        action = new BuyBookAction(this); // Pass this to demonstrate super usage
+                        break;
+                    case 2:
+                        action = new ViewAllBooksAction();
+                        break;
+                    case 3:
+                        action = new MembershipAction();
+                        break;
+                    case 4:
+                        System.out.println("Exiting the store... Have a Good Day!!!");
+                        System.exit(0);
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+                if (action != null) {
+                    action.execute();
+                }
+            }
+        }
+    }
+
+    // Action to buy a book
+    static class BuyBookAction implements MenuAction {
+        private final MainMenu mainMenu; // final to ensure it's assigned only once
+
+        public BuyBookAction(MainMenu mainMenu) {
+            this.mainMenu = mainMenu; // Demonstrate this usage
+            System.out.println("BuyBookAction initialized with MainMenu reference");
+        }
+
+        @Override
+        public void execute() {
+            BookStore bookStore = new BookStore();
+            bookStore.displayCategories();
+        }
+    }
+
+    // BookStore class to handle book categories
+    static class BookStore {
+        public void displayCategories() {
+            while (true) {
+                System.out.println("\n======================");
+                System.out.println(" Book Categories");
+                System.out.println("======================");
+                System.out.println("1 - History");
+                System.out.println("2 - Story Telling");
+                System.out.println("3 - Academic");
+                System.out.println("4 - Return to Prior Menu");
+                System.out.println("======================");
+                System.out.print("Enter your choice: ");
+
+                int choice = Integer.parseInt(scanner.nextLine());
+                if (choice == 4) return;
+
+                BookCategory category = null;
+                switch (choice) {
+                    case 1:
+                        category = new HistoryCategory();
+                        break;
+                    case 2:
+                        category = new StoryCategory();
+                        break;
+                    case 3:
+                        category = new AcademicCategory();
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                        continue;
+                }
+
+                if (category != null) {
+                    category.displayBooks();
+                }
+            }
+        }
+    }
+
+    // Abstract class for Book Categories
+    abstract static class BookCategory {
+        protected String[] books;
+        protected int[] prices;
+
+        public BookCategory() {
+            System.out.println("BookCategory initialized");
+        }
+
+        public abstract void displayBooks();
+
+        // Method to process book selection and purchase
+        protected void processBookSelection() {
+            while (true) {
+                System.out.print("Enter your choice (1-" + books.length + ", M to return to prior menu): ");
+                String choice = scanner.nextLine().toUpperCase();
+
+                if (choice.equals("M")) return;
+
+                int index = Integer.parseInt(choice) - 1;
+                if (index >= 0 && index < books.length) {
+                    System.out.print("Enter quantity: ");
+                    int quantity = Integer.parseInt(scanner.nextLine());
+                    int amount = prices[index] * quantity;
+                    System.out.println("You chose " + books[index] + " - Quantity: " + quantity + " - Total: Rs " + amount);
+                    totalAmount += amount;
+                    Payment.processPayment();
+                }
+            }
+        }
+    }
+
+    // Concrete classes for each book category
+    static class HistoryCategory extends BookCategory {
+        public HistoryCategory() {
+            super();
+            books = new String[]{"Ancient History", "Medieval History", "Modern History"};
+            prices = new int[]{300, 400, 500};
+        }
+
+        @Override
+        public void displayBooks() {
+            System.out.println("\n======================");
+            System.out.println(" History Books");
+            System.out.println("======================");
+            for (int i = 0; i < books.length; i++) {
+                System.out.println((i + 1) + " - " + books[i] + " (Rs " + prices[i] + ")");
+            }
+            processBookSelection();
+        }
+    }
+
+    static class StoryCategory extends BookCategory {
+        public StoryCategory() {
+            super();
+            books = new String[]{"Fables", "Fairy Tales", "Mythology"};
+            prices = new int[]{200, 300, 400};
+        }
+
+        @Override
+        public void displayBooks() {
+            System.out.println("\n======================");
+            System.out.println(" Story Books");
+            System.out.println("======================");
+            for (int i = 0; i < books.length; i++) {
+                System.out.println((i + 1) + " - " + books[i] + " (Rs " + prices[i] + ")");
+            }
+            processBookSelection();
+        }
+    }
+
+    static class AcademicCategory extends BookCategory {
+        public AcademicCategory() {
+            super();
+            books = new String[]{"Math", "Science", "English"};
+            prices = new int[]{100, 150, 200};
+        }
+
+        @Override
+        public void displayBooks() {
+            System.out.println("\n======================");
+            System.out.println(" Academic Books");
+            System.out.println("======================");
+            for (int i = 0; i < books.length; i++) {
+                System.out.println((i + 1) + " - " + books[i] + " (Rs " + prices[i] + ")");
+            }
+            processBookSelection();
+        }
+    }
+
+    // Membership action class
+    static class MembershipAction implements MenuAction {
+        public MembershipAction() {
+            System.out.println("MembershipAction initialized");
+        }
+
+        @Override
+        public void execute() {
+            System.out.print("Enter your name: ");
+            String name = scanner.nextLine();
+            System.out.print("Enter your age: ");
+            int age = Integer.parseInt(scanner.nextLine());
+            System.out.print("Enter your gender (M/F): ");
+            String gender = scanner.nextLine().toUpperCase();
+
+            int membershipAmount = (age >= 18) ? 200 : 150;
+            System.out.println("Membership amount is: Rs " + membershipAmount);
+
+            while (true) {
+                System.out.println("Do you want to proceed to payment? (Y/N) or (M) to return to the prior menu: ");
+                String paymentChoice = scanner.nextLine().toUpperCase();
+                if (paymentChoice.equals("Y")) {
+                    System.out.println("Payment successful! Membership confirmed for " + name + ", age " + age + ", gender " + gender + ".");
+                    System.out.println("\nCongratulations on becoming a member! Here are some of your benefits:");
+                    System.out.println("1. Discount on all future purchases.");
+                    System.out.println("2. Access to exclusive members-only sales.");
+                    System.out.println("3. Priority customer support.");
+                    break;
+                } else if (paymentChoice.equals("M")) {
+                    break;
+                } else if (paymentChoice.equals("N")) {
+                    System.out.println("Returning to main menu without membership.");
+                    break;
+                }
+            }
+        }
+    }
+
+    // Action to view all books
+    static class ViewAllBooksAction implements MenuAction {
+        public ViewAllBooksAction() {
+            System.out.println("ViewAllBooksAction initialized");
+        }
+
+        @Override
+        public void execute() {
+            System.out.println("\n======================");
+            System.out.println(" Available Books");
+            System.out.println("======================");
+            System.out.println("1 - Ancient History");
+            System.out.println("2 - Tales");
+            System.out.println("3 - Math");
+            System.out.println("4 - Physics");
+            System.out.println("5 - Story books");
+            System.out.println("6 - Physics");
+            System.out.println("7 - Calculus");
+            System.out.println("8 - Discrete Math");
+            System.out.println("9 - Statistics");
+            System.out.println("10 - Mythology");
+            System.out.println("======================");
+            System.out.print("Enter m to return to Prior Menu: ");
+            scanner.nextLine();
+        }
+    }
+}

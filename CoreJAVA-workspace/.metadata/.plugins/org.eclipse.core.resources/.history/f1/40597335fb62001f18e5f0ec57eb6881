@@ -1,0 +1,23 @@
+package com.evergent.corejava.nikhitha.library;
+
+public class LibraryInterfaceDemo {
+
+	public static void main(String[] args) {
+		KidUser k1=new KidUser();
+		k1.registerAccount(10);
+		k1.requestBook("Kids");
+		
+		KidUser k2=new KidUser();
+		k2.registerAccount(18);
+		k2.requestBook("Fiction");
+		
+		AdultUser a1=new AdultUser();
+		a1.registerAccount(5);
+		a1.requestBook("Kids");
+		
+		AdultUser a2=new AdultUser();
+		a2.registerAccount(23);
+		a2.requestBook("Fiction");
+	}
+
+}

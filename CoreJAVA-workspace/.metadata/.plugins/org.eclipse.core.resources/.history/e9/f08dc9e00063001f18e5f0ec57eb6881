@@ -1,0 +1,7 @@
+package com.evergent.corejava.nikhitha.library;
+
+public class InvalidBookTypeAdultsException extends Exception {
+	public InvalidBookTypeAdultsException(String message) {
+		super(message);
+	}
+}

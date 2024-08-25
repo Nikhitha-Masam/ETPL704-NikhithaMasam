@@ -1,0 +1,33 @@
+package com.evergent.corejava.nikhitha.library;
+import java.util.Scanner;
+public class LibraryInterfaceDemo {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		
+		System.out.println("Enter name to register");
+		String name=sc.next();
+		System.out.println("Enter age");
+		int age=sc.nextInt();
+		System.out.println("enter book type");
+		String type=sc.next();
+		if(age<12) {
+			KidUser k1=new KidUser();
+			k1.registerAccount(age);
+			k1.requestBook(type);
+		}
+		else {
+			AdultUser a1=new AdultUser();
+			a1.registerAccount(age);
+			a1.requestBook(type);
+		}
+		
+		 
+		
+		
+		 
+		
+		 
+	}
+
+}
